@@ -40,10 +40,16 @@ export const UserLogin = async (req, res) => {
             })
         }
         createCookie(res, 200, user, 'Login Successfully')
-        // res.status(201).json({
-        //     success: true,
-        //     message: "Loged In Successfully"
-        // })
+    } catch (error) {
+        console.log();
+    }
+}
+export const UserProfile = async (req, res) => {
+    try {
+        res.status(200).json({
+            success: true,
+            user:req.user
+        })
     } catch (error) {
         console.log();
     }
