@@ -3,6 +3,7 @@ import express from 'express';
 import { userRouter } from './routes/userRouter.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { contactRouter } from './routes/contectRouter.js';
 
 export const  app = express();
 configDotenv({
@@ -17,4 +18,5 @@ app.use(cors({
     credentials:true,
 }))
 
-app.use('/user',userRouter)
+app.use('/user',userRouter);
+app.use('/contact',contactRouter);

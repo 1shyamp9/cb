@@ -1,7 +1,6 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { createCookie } from "../utils/feature.js";
-import ErrorHandler from "../middleware/error.js";
 
 export const CreateUser = async (req, res) => {
     try {
@@ -23,17 +22,16 @@ export const CreateUser = async (req, res) => {
         console.log();
     }
 }
-export const UserLogin = async (req, res,next) => {
+export const UserLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
         let user = await User.findOne({ email })
-        // if (!user) {
-        //     return res.status(404).json({
-        //         success: false,
-        //         message: "Incurrect Email And Password"
-        //     })
-        // }
-        if(!user) return next(new ErrorHandler("Incurrect Email And Password",404))
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "Incurrect Email And Password"
+            })
+        }
         const isPass = await bcrypt.compare(password, user.password);
         if (!isPass) {
             return res.status(404).json({
@@ -66,6 +64,22 @@ export const UserLogout = async (req, res) => {
         }).json({
             success: true,
             message: 'Logout Successfully'
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+export const UserDelete = async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.user._id)
+        res.status(200).cookie('token', '', {
+            httpOnly: false,
+            maxAge: new Date(Date.now()),
+            sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
+            secure: process.env.NODE_ENV === "Development" ? false : true,
+        }).json({
+            success: true,
+            message: 'User Deleted Permantly'
         })
     } catch (error) {
         console.log(error);
