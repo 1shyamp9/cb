@@ -1,6 +1,7 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { createCookie } from "../utils/feature.js";
+import ErrorHandler from "../middleware/error.js";
 
 export const CreateUser = async (req, res) => {
     try {
@@ -22,16 +23,17 @@ export const CreateUser = async (req, res) => {
         console.log();
     }
 }
-export const UserLogin = async (req, res) => {
+export const UserLogin = async (req, res,next) => {
     try {
         const { email, password } = req.body;
         let user = await User.findOne({ email })
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "Incurrect Email And Password"
-            })
-        }
+        // if (!user) {
+        //     return res.status(404).json({
+        //         success: false,
+        //         message: "Incurrect Email And Password"
+        //     })
+        // }
+        if(!user) return next(new ErrorHandler("Incurrect Email And Password",404))
         const isPass = await bcrypt.compare(password, user.password);
         if (!isPass) {
             return res.status(404).json({
