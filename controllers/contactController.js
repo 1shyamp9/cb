@@ -80,7 +80,7 @@ export const AllContact = async (req, res) => {
         let allContacts = await Contact.find({ user: userId }) 
         res.status(201).json({
             success: true,
-            message: "All Contact Here",
+            message: "All Contacts Here",
             allContacts,
         })
     } catch (error) {
