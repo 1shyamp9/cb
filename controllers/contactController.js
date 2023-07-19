@@ -49,7 +49,7 @@ export const updateContact = async (req, res) => {
         const updatedContact = await Contact.findByIdAndUpdate(contact, { $set: { name, mobile, address } })
         res.status(201).json({
             success: true,
-            message:"Contact Updated successfully",
+            message: "Contact Updated successfully",
             updatedContact,
         })
     } catch (error) {
@@ -68,7 +68,20 @@ export const deleteContact = async (req, res) => {
         contact.deleteOne();
         res.status(201).json({
             success: true,
-            message:"Contact Deleted successfully"
+            message: "Contact Deleted successfully"
+        })
+    } catch (error) {
+        console.log();
+    }
+}
+export const AllContact = async (req, res) => {
+    try {
+        const userId = req.user._id
+        let allContacts = await Contact.find({ user: userId }) 
+        res.status(201).json({
+            success: true,
+            message: "All Contact Here",
+            allContacts,
         })
     } catch (error) {
         console.log();
